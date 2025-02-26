@@ -11,6 +11,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentSnapshot;
 import java.util.concurrent.ExecutionException;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootApplication
 public class AxedBackendApplication {
@@ -37,15 +38,16 @@ public class AxedBackendApplication {
 		}
 
 		@GetMapping("/test-firebase")
-		public String testFirebase() {
+		public ResponseEntity<String> testFirebase() {
 			try {
-				// Simple test to verify Firestore is working
 				ApiFuture<DocumentSnapshot> future = firestore.collection("test").document("test").get();
-				future.get(); // Wait for response
-				System.out.println(firebaseApp);
-				return "Firebase connection successful! App name: " + firebaseApp.getName();
+				DocumentSnapshot document = future.get();
+				if (document.exists()) {
+					return ResponseEntity.ok("Firebase connection successful! Data: " + document.getData());
+				}
+				return ResponseEntity.ok("Firebase connection successful! App name: " + firebaseApp.getName());
 			} catch (InterruptedException | ExecutionException e) {
-				return "Firebase operation failed: " + e.getMessage();
+				return ResponseEntity.status(500).body("Firebase operation failed");
 			}
 		}
 	}
