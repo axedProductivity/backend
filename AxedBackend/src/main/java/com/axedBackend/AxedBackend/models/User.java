@@ -6,7 +6,6 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private int age;
-    private String gender;
     private String profilePicture;
     private String id;
 
@@ -19,9 +18,7 @@ public class User {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
         this.age = age;
-        this.gender = gender;
         this.profilePicture = profilePicture;
     }
 
@@ -49,10 +46,6 @@ public class User {
         return age;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
     public String getProfilePicture() {
         return profilePicture;
     }
@@ -75,11 +68,6 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
-    }
-
-    public void setGender(String gender) {
-
-        this.gender = gender;
     }
 
     public void setId(String id) {

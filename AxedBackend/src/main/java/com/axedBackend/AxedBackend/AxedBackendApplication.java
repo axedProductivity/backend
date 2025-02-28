@@ -12,6 +12,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import java.util.concurrent.ExecutionException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.ResponseEntity;
+import com.axedBackend.AxedBackend.controller.UserController;
 
 @SpringBootApplication
 public class AxedBackendApplication {
@@ -21,6 +22,7 @@ public class AxedBackendApplication {
 	}
 
 	@RestController
+
 	@RequestMapping("/api")
 	public class HelloWorldController {
 		private final Firestore firestore;

@@ -15,6 +15,14 @@ public class UserRepository {
         this.db = db;
     }
 
+    public boolean userExistsByEmail(String email) throws ExecutionException, InterruptedException {
+        CollectionReference usersCollection = db.collection("users");
+        Query query = usersCollection.whereEqualTo("email", email);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+        return !querySnapshot.get().getDocuments().isEmpty();
+    }
+
     public String createUser(User user) throws ExecutionException, InterruptedException {
         DocumentReference docRef = db.collection("users").document(user.getId());
         ApiFuture<WriteResult> result = docRef.set(user);
@@ -25,14 +33,7 @@ public class UserRepository {
         DocumentReference docRef = db.collection("users").document(id);
         ApiFuture<DocumentSnapshot> future = docRef.get();
         DocumentSnapshot document = future.get();
-        User user = document.toObject(User.class);
-        return user;
-    }
-
-    public String updateUser(User user) throws ExecutionException, InterruptedException {
-        DocumentReference docRef = db.collection("users").document(user.getId());
-        ApiFuture<WriteResult> result = docRef.set(user);
-        return result.get().getUpdateTime().toString();
+        return document.toObject(User.class);
     }
 
     public String deleteUser(String id) throws ExecutionException, InterruptedException {
