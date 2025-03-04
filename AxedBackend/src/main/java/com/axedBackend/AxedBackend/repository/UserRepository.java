@@ -26,7 +26,7 @@ public class UserRepository {
     }
 
     public String createUser(User user) throws ExecutionException, InterruptedException {
-        DocumentReference docRef = db.collection("users").document(user.getId());
+        DocumentReference docRef = db.collection("users").document();
         ApiFuture<WriteResult> result = docRef.set(user);
         return result.get().getUpdateTime().toString();
     }
