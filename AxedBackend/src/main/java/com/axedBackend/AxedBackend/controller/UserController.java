@@ -3,9 +3,9 @@ package com.axedBackend.AxedBackend.controller;
 import com.axedBackend.AxedBackend.models.User;
 import com.axedBackend.AxedBackend.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.ExecutionException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,5 +30,16 @@ public class UserController {
             errorResponse.put("error", e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
+    }
+
+    // Example protected endpoint
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> getCurrentUser() {
+        String uid = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", 200);
+        response.put("uid", uid);
+        response.put("message", "Authenticated user");
+        return ResponseEntity.ok(response);
     }
 }

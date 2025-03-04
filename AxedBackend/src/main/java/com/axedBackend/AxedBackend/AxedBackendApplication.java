@@ -21,36 +21,4 @@ public class AxedBackendApplication {
 		SpringApplication.run(AxedBackendApplication.class, args);
 	}
 
-	@RestController
-
-	@RequestMapping("/api")
-	public class HelloWorldController {
-		private final Firestore firestore;
-		private final FirebaseApp firebaseApp;
-
-		@Autowired
-		public HelloWorldController(Firestore firestore, FirebaseApp firebaseApp) {
-			this.firestore = firestore;
-			this.firebaseApp = firebaseApp;
-		}
-
-		@GetMapping("/hello")
-		public String sayHello() {
-			return "Hello World";
-		}
-
-		@GetMapping("/test-firebase")
-		public ResponseEntity<String> testFirebase() {
-			try {
-				ApiFuture<DocumentSnapshot> future = firestore.collection("test").document("test").get();
-				DocumentSnapshot document = future.get();
-				if (document.exists()) {
-					return ResponseEntity.ok("Firebase connection successful! Data: " + document.getData());
-				}
-				return ResponseEntity.ok("Firebase connection successful! App name: " + firebaseApp.getName());
-			} catch (InterruptedException | ExecutionException e) {
-				return ResponseEntity.status(500).body("Firebase operation failed");
-			}
-		}
-	}
 }

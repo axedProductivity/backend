@@ -29,11 +29,6 @@ public class UserService {
             return response;
         }
 
-        // Assign a UUID if not already provided
-        if (user.getId() == null || user.getId().isEmpty()) {
-            user.setId(UUID.randomUUID().toString());
-        }
-
         String updateTime = userRepository.createUser(user);
         response.put("status", 201); // Created
         response.put("message", "User created successfully");
