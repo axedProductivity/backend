@@ -4,8 +4,6 @@ import com.axedBackend.AxedBackend.models.User;
 import com.axedBackend.AxedBackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.HashMap;
 import java.util.Map;
