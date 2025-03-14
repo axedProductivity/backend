@@ -25,6 +25,7 @@ public class NotesRepository {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", result.get().getUpdateTime().toString());
         response.put("message", "Note created successfully");
+        response.put("id", docRef.getId());
         return response;
     }
 
@@ -32,6 +33,8 @@ public class NotesRepository {
         CollectionReference notesCollection = db.collection("notes");
         List<QueryDocumentSnapshot> querySnapshot = notesCollection.whereEqualTo("userId", userId).get().get()
                 .getDocuments();
+        System.out.println(querySnapshot);
+        System.out.println(userId);
         List<Notes> notes = new ArrayList<>();
         for (QueryDocumentSnapshot document : querySnapshot) {
             notes.add(document.toObject(Notes.class));
@@ -44,10 +47,33 @@ public class NotesRepository {
 
     public Map<String, Object> updateNote(String id, Notes note) throws ExecutionException, InterruptedException {
         DocumentReference docRef = db.collection("notes").document(id);
-        ApiFuture<WriteResult> result = docRef.set(note);
+        DocumentSnapshot existingDoc = docRef.get().get();
+        Notes existingNote = existingDoc.toObject(Notes.class);
+
+        if (existingNote != null) {
+            if (note.getTitle() != null && !note.getTitle().isEmpty()) {
+                existingNote.setTitle(note.getTitle());
+            }
+            if (note.getContent() != null && !note.getContent().isEmpty()) {
+                existingNote.setContent(note.getContent());
+            }
+            if (note.getUserId() != null && !note.getUserId().isEmpty()) {
+                existingNote.setUserId(note.getUserId());
+            }
+
+            existingNote.setUpdatedAt(java.time.Instant.now().toString());
+
+            ApiFuture<WriteResult> result = docRef.set(existingNote);
+            Map<String, Object> response = new HashMap<>();
+            response.put("timestamp", result.get().getUpdateTime().toString());
+            response.put("message", "Note updated successfully");
+            response.put("note", existingNote);
+            return response;
+        }
+
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", result.get().getUpdateTime().toString());
-        response.put("message", "Note updated successfully");
+        response.put("message", "Note not found");
+        response.put("error", true);
         return response;
     }
 
@@ -77,6 +103,13 @@ public class NotesRepository {
             response.put("message", "Note not found");
             response.put("error", true);
         }
+        return response;
+    }
+
+    public Map<String, Object> getNoteById(String id) throws ExecutionException, InterruptedException {
+        Notes note = db.collection("notes").document(id).get().get().toObject(Notes.class);
+        Map<String, Object> response = new HashMap<>();
+        response.put("note", note);
         return response;
     }
 
